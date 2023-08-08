@@ -1,0 +1,12 @@
+Weather,Temperature,Humidity,Injure,Mood,RUN
+clear,cool,normal,slightly,happy,NO
+shower,mild,High,fit,stressed,YES
+storm,mild,High,fit,happy,NO
+shower,mild,High,slightly,stressed,YES
+clear,hot,normal,fit,lazy,YES
+storm,hot,High,fit,stressed,NO
+clear,hot,normal,severe,happy,NO
+clear,mild,less,severe,stressed,NO
+shower,mild,normal,slightly,happy,NO
+shower,hot,High,fit,happy,YES
+storm,hot,normal,slightly,happy,NO

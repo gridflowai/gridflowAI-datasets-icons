@@ -1,0 +1,21 @@
+AverageNumberofTickets   NumberofEmployees   ValueofContract Industry
+   0              1                    51                  25750    Retail
+   1              9                    68                  25000    Services
+   2             20                    67                  40000    Services
+   3              1                   124                  35000    Retail
+   4              8                   124                  25000    Manufacturing
+   5             30                   134                  50000    Services
+   6             20                   157                  48000    Retail
+   7              8                   190                  32000    Retail
+   8             20                   205                  70000    Retail
+   9             50                   230                  75000    Manufacturing
+  10             35                   265                  50000    Manufacturing
+  11             65                   296                  75000    Services
+  12             35                   336                  50000    Manufacturing
+  13             60                   359                  75000    Manufacturing
+  14             85                   403                  81000    Services
+  15             40                   418                  60000    Retail
+  16             75                   437                  53000    Services
+  17             85                   451                  90000    Services
+  18             65                   465                  70000    Retail
+  19             95                   491                  100000   Services

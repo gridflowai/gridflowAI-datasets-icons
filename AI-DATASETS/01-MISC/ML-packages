@@ -1,0 +1,5 @@
+pip install mlxtend
+pip install graphviz
+pip install pandas-datareader
+pip install tensorflow
+pip install tensorflow-datasets

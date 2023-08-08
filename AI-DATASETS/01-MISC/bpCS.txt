@@ -1,0 +1,141 @@
+transpose to xyz, followed by fill
+I can say that I have used shootrays in the past, in fact, it was part of my first assignment in BP, it is pretty neat. Some user interface enhancement might be good to add to that tool. At that time I used DDSPLOT to display the result. 
+Thanks L'heureux, Elizabeth, I’ll take a look!
+Just as a follow up, here is what sparseradon can do with not that much of an effort. The result is not perfect, and can certainly be further improved by combining sparseradon with adaptive subtraction and some better muting. But still, after just a little bit of playing the "80% solution" is pretty cool.  As a note, I was after the faint near-flat events originally covered by the noise.  
+I'd like to know this too. I used to do it in a work-around. I first create a volume with the surfaces, then convert from depth to time, finally re-pick the surface.
+Tillotson, Philip, yes, you can use mergeND to merge the DDS files before header extraction, or cat to merge the header dumps together afterwards. Once you have the raw source & receiver XY positions in a table, it is also straightforward to calculate other useful attributes like source-receiver offset and azimuth, which can also be plotted / put into a histogram.
+You can also use ddsget to dump header information (e.g. source and receiver XY) to ascii, then utilities like sort and uniq to remove duplicates, and then standard plotting programs (e.g. ddsplot, Gnuplot, Matlab, matplotlib in Python) to plot them out.  
+Crosby, Alistair should you also link to pre-stack pro & conneXus material too?
+Another quick question DDS Q&A: is there a way to mute printfile output for a whole script (or at least set /dev/null as the default path)?  I've lost count of the number of times I've typed "print_path=/dev/null" for basic commands like editd and wondered whether there was a better way... 🙂
+BIG NUMBER OF SAMPLES + > 1.5TB OF DATA FROM 10 MPI WORKERS + LUSTRE
+Vladimir, Atish has an issue with one of the runs for py_applyexpr.
+It reports this:
+DDS SYNTAX ERROR: dict=<default>, line= 0, defn= map:in_buf:out_buf.Samples        assignment '=' non-conformable vector operands
+And I have hard time understanding what it can be for.
+I know that the behavior is changing in the middle of compute: https://hpcstats.hpc.pce.bp.com/d/v_i97BJGz/cascade-lake-ap?var-job_id=5294453&from=1629698466000&to=1629726508000
+ 
+And you can see the logs here: /home/roya0d/HPCDATA/L1_MAP3/Gal_3/ANALYSIS/OUTPUTS/LOGS/Dist.log
+The joblog is here: /home/roya0d/HPCDATA/L1_MAP3/Gal_3/ANALYSIS/OUTPUTS/LOGS/Dist
+ 
+I thought that it might be too big of trace for DDS - but it is something around 1.5GB if I'm not mistaken - which should be fine given DDS's 2GB limit, right?
+The output dataset size is 180009 x 7 x 149201
+So if anyone in DDS Q&A ever had similar errors - would be great to know - since I never seen this one before.
+ 
+I'm sure this is something simple and I'm digging too deep...
+WELCOME!
+Hi everyone, please use this channel to post and answer questions.  Topics could include (but are not limited to):
+ 
+DDS
+USP
+PyDDS
+Related linux utilities
+Related CHPC-specific utilities (e.g. qsub)
+Jupyter notebooks
+Thanks, Vyas, Madhav!
+I created a new version here - https://hpcgitlab.hpc.pce.bp.com/dds/core/pydds/-/tags/v1.9 but I don't have a way to deploy it right now.
+ddstats is the only way that I know of. The man page for py_applyexpr shows an example of computing the global mean of a dataset using MPI for reductions. If you don't plan to run it in parallel, then that example can be substantially simplified. It doesn't show how to do std.deviation though.
+Saner3d will give you a volume of wavelets estimated in a particular time window throughout a 3D cube. You could loop over this to get a time-varying result.
+DDS Q&A another question that came from Gasimov, Ayaz.
+Step 1:
+
+I have a 3D volume, inside it I have Mud Volcano ( it is more or less centrally located).  I want to kill velocities inside polygon.  ( this can be done in Petrel)
+
+Step 2:
+
+I want to interpolate the velocities from outside MV into the hole I created.
+
+ 
+
+ 
+
+Is there any DDS command you think there is to do what I want?
+
+
+
+It looks like DDS doesn't like when you call cdds_map() between two buffers with different number of Samples. I'll have to patch PyDDS to disable automatic buffer mapping in such cases. That may also affect automatic header copying in such cases, but this particular example doesn't have any headers.
+Project to port USP programs to DDS is frozen and we occasionally port some tools (once a year or so) when business need it. transpose+polymute+transpose+interpolation sounds to be quite OK workflow to me (especially given that each step is parallel). If we are missing some business related features there - or this workflow is not working - rise a redmine ticket - we will check it out.
+Pretty sure it does. Environment variables are checked first, and only over-ridden if you specify something else in a par file or on the command line. 
+gridt2d?
+Wu, Sixue Ah, they are geom files (I thought you were dealing with geometry still in headers).   Here is a link to a Python program that extracts unique source and receiver positions from a geom file and plots it on a map:
+Crosby, Alistair: Geom file plot maker 
+posted in DDS Q&A / Short workflows at 16 July 2021 14:18:18
+Could be easily adapted to look at depth, offset, azimuth statistics as well
+ 
+Crosby, Alistair this was my thinking. May or may not want to concatenate the files together first using something like dds_bridge, or write a loop in a script to run for each file.
+Maybe it's worth asking... About how much data do you have?
+Davies, Daniel, absolutely.  Can you provide me with some links (especially pre-stack pro, which I'm less familiar with)?
+SEISMIC TECHNOLOGY TOOLKIT HUB
+Hi DDS Q&A, I would be interested to get your feedback on this "functional mock-up" of a Seismic Technology "Toolkit Hub" - a one-stop-shop covering all resources for our internal processing and imaging toolkits.  The idea is that this site consolidates links to materials that are spread between numerous different sites, and which can be difficult to find.
+ 
+Seismic Technology Toolkit Hub (bp.com)
+ 
+Note this is not the final version - so please be brutal about what we should add / modify / take away 🙂  
+transpose the axis, use polymute, transpose back, then use your favourite interpolation tool (too many in DDS to pick)
+Thanks Tillotson, Philip : I used it and worked well. 
+ampspecd in=post_seismic db= normx= out=ampspecd_spectrum (of you can use editd to select line/xline/time range first)
+DDS Q&A, is there any way to get a locally varying  wavelet estimation from a seismic image?
+setenv USP_PRINT_BYPASS TRUEsetenv PRINT_PATH /dev/nullput these two at the begining of the script
+Y'all beat me to it, just be aware you'll always see that warning if the binary size doesn't match the dictionary definition. 
+edit the dictionary?...... Hodgson, Linda helped me with this years ago....
+Do you mean read out the x,y coordinates of the source and receiver locations for each file?
+You could try sparseradon, here is the page with a link to the novice user documentation, I do have sample code scripts in there -  https://seismicimaging.bpweb.bp.com/3dmbs_web/Projects/SignalProc/Technologies/sparse_radon.html
+Hi Sixue, point me at your files and I will see if prep3d can do things you want.
+Are you dealing with geometry files or data from headers? If geometry, I'm surprised that Hydra is slow. Once you get the files in there you can do the decimation on the display (say only every 100th receiver) to speed it up.
+I can't quantify "best", but if Hydra is slow you can talk to Jim Lin about it and see if there are options to handle it faster. 
+ 
+Other alternatives for visualization I know of are py_slicer and xsd, but not qualified to say if they'd be any better. There's also an application called py_makepptx if you want to output visualizations to a powerpoint, rather than interactively viewing them. 
+DDS Q&A Hi folks, what is the best way to visualize the sources and receiver geometries of streamer data (WATS) with many files? I have 218 files. It's quite slow loading one file in Hydra already.  Thanks! 
+Hi DDS Q&A, is there a way to force-edit the "official" number of traces in a DDS file?  I have the current program output which has a mismatch between the actual number of traces and the number of traces recognized by ddscan, xsd etc.
+ 
+
+RAY TRACING
+Ok, I'll go next DDS Q&A -
+ 
+I am looking for something that approximates Petrel's "ray tracing" utilities... as in you provide a model (maybe TTI, maybe VTI), a surface/horizon, and it computes the travel paths (not just the travel times) from that surface/horizon to the surface of the model (or some defined survey geometry). You can specify azimuth bins to generate, and maximum offsets as a filter. The outputs from it are basically a big CSV with the rays that were generated from each subsurface origination point. I can then use this to make a really rudimentary illumination volume of what part of the model is being used to illuminate that subsurface horizon, but it's a super painful process because it involves a lot of manual clicking that can't be automated in any way ...
+ 
+It's my understanding that the Kirchhoff code does this internally but it's unclear to me whether there is a standalone application that can replicate this sort of output. Has anyone done anything like this before in DDS? I see tiray might be useful, but not sure how to use it in this context. Anyone able to help? 🙂 
+Reitz, Anya, the Hydra RT is isotropic only but it does a very good job in terms of showing the ray field from a source positioned anywhere in the model. It does give you isotropic travetimes as well. If you want more complex RT, shootrays is a DDS code - has to be combined with some plotting though, maybe even Hydra could plot it ... let me know if you get to that, could discuss more.
+Thank you for your hard work, Vladimir, now it runs - but it still producing that error message: /lustre01/vol0/roya0d_lustre03/MAP3/Gal_4/ANALYSIS/OUTPUTS/LOGS/Dist.log
+Is it supposed to be doing that? Should we pass copysmp=n and copyhdr=n to it to avoid those - or it's something else?
+Thanks - I wonder how difficult it would be to adjust ddstats so that it could, if requested, just calculate a single quantity and dump it to stdout?  Calculating 3*stdev, as above, is something I commonly do to manually scale seismic sections, e.g. in py_raster.  Or, perhaps this option could simply be put into py_raster and/or py_makepptx, which might be easier...
+Madhav - presumably your standalone code is already 'in the hands' of users, i.e. broadly accessible and findable via [u|m]man -k?  velint looks like a usp program.  Did we give up on porting 'everything' from usp to dds Anar Z.?
+Yep, looks like you can just add PRINT_PATH=/dev/null. https://seismicimaging.bpweb.bp.com/DDS/users/runtime.html
+You can use ampspecspark to get a matrix of amplitude spectra which you can overlay on the stack in xsd, which will give you a visual indication of how the spectral content is varying (but won't give you a wavelet)
+
+
+DDS Q&A does anyone have any information on DISCO format beyon what is in dds_disco? thanks
+I think that copyhdr=n should be enough.
+There is also a command called velint that does that. You can try to use that. If you are not satisfied with the outcome, I do have a standalone code that performs dip consistent extensions of the property volume. In order to run that, I would need the velocity model, with the hole, and a cx/cy volume so that I can smoothly extrapolate along dip 
+Song, Xiaolei 'swak' outputs both time-varying amplitude spectra and wavelets
+Quick question DDS Q&A:
+ 
+Is there a quick way of dumping the min, max and standard deviation of a seismic dataset?  Currently I have to pull the relevant numbers out of the stderr output of ddstats, which is not very elegant or efficient, e.g.
+ 
+Maybe a py_applyexpr 1-liner?
+Reitz, Anya you can try the Hydra ray tracing plugin. It might not check all the boxes but it has some good functionality, at least for visualizing ray paths.
+No, it won't work like that. There is a non-conditional cdds_map() call deep in PyDDS for each output that has inherited an input. I need to make it conditional.
+Vladimir, so this is inheritance issue, right? I guess I could simply supply copy_headers=n copy_samples=n to the code and let it go through, right?
+expected number is just the total size of all the axes (except axis 1) - so editing the dictionary size, size.trace, size.shot, etc, will change the total expected value. so in this case, add "size.shot=1" to dictionary will fix the mismatch above
+Davies, Daniel mman vfconv  
+I would suggest to check with Joe Wade - he still gets emails and can reply within a day or so.
+Seismic images only, post stack.
+what would be the inputs, Xiaolei? 
+DDS Q&A, a question from Tiwari, Anshuman: is there a way to depth to time convert surfaces in DDS. I think tdconv is only for the conformable seismic/velocity volumes.
+Thank you, Vladimir, then we will be waiting for it. It's quite important for MAP3 project - so I would appreciate if you could let me know once we can test it. 
+Johnston, Rodney G unfortunately not. I wrote that almost 10 years ago, the workflow for that is a bit ugly, I never pushed it as the other alternatives were quite comparable. For certain scenarios it can be better. If we find it useful we can move it to DDS. The core of the program uses dip steering filters to extrapolate information along dips. You can provide weights to honor what you know and fill up everything in between following dips. 
+Thanks Linda - but does this work for all DDS commands in a script?
+REMOVING MULTIPLES
+An attempt to get this going. Jilek, Petr asked about cleaning up some of the multiple energy from the gathers below.
+Madhav if there is a tool that can give better results than other methods, and would be used if available, then I'd like to see us democratise the solution for other users if feasible.  Can you demonstrate the workflow with a short notebook?
+Crosby, Alistair: Pretty sure there's a environment variable. I'd have to look it up though.
+Many thanks all! I missed the discussion here - these are very useful! Yes Tillotson, Philip eventually I need the x, y coordinates and depths of the source and receivers. Figured out I had too many things open in Hydra... loading one geom file is fast after I closed all that... L'heureux, Elizabeth Tillay, Jeremy (NAG) 
+ 
+Etgen, John T I have about 7.1T data and they are in /lustre02/vol0/GOMX_Spinel/processing/p01_preBdecon/data_usp
+ 
+Summarizing all great suggestions:
+1- Hydra <-- mergeND all geom files  (should be fast, if not do decimation on the display) doing this atm
+2- prep3d <-- editd to decimate the data in trace,t (sounds handy!)
+3- Standard plotting programs <-- extract raw source & receiver XYZ to an ascii file using e.g. ddsget (flexible with other plotting utilities) Crosby, Alistair
+4- xsd+py_slicer/ py_makepptx (to be explored in the future)
+What I would do is use editd to decimate the data (cut out most of time time samples and reduce the number of traces by some decimation factor) and then load the data into an interactive program called "prep3d".  That will allow you to plot sources and receivers and CMP locations, as well as apply coordinate transforms to design local coordinate systems to process merged surveys and things like that.
+Crosby, Alistair, i think Kareem is the product champion, so best to speak to him?....
